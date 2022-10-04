@@ -1,0 +1,24 @@
+{
+    "name": "ai.natml.vision.yunet",
+    "version": "1.0.0",
+    "displayName": "YuNet",
+    "description": "Ultra-high performance face detection in Unity Engine.",
+    "unity": "2021.2",
+    "dependencies": {
+        "ai.natml.natml": "1.0.18"
+    },
+    "keywords": [
+        "natml",
+        "machine learning",
+        "ml",
+        "face",
+        "face detection"
+    ],
+    "author": {
+        "name": "NatML",
+        "email": "hi@natml.ai",
+        "url": "https://github.com/natmlx"
+    },
+    "license": "BSD-3-Clause",
+    "repository": "github:natml-hub/YuNet"
+}
