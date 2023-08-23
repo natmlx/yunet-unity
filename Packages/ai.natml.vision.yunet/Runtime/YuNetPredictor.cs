@@ -1,6 +1,6 @@
 /* 
-*   YuNet Face Detection
-*   Copyright (c) 2022 NatML Inc. All Rights Reserved.
+*   YuNet
+*   Copyright (c) 2023 NatML Inc. All Rights Reserved.
 */
 
 namespace NatML.Vision {
@@ -8,6 +8,7 @@ namespace NatML.Vision {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using UnityEngine;
     using NatML.Features;
     using NatML.Internal;
@@ -22,18 +23,9 @@ namespace NatML.Vision {
 
         #region --Client API--
         /// <summary>
-        /// Create the YuNet face predictor.
+        /// YuNet predictor tag.
         /// </summary>
-        /// <param name="model">YuNet ML model.</param>
-        /// <param name="minScore">Minimum candidate score.</param>
-        /// <param name="maxIoU">Maximum intersection-over-union score for overlap removal.</param>
-        public YuNetPredictor (MLModel model, float minScore = 0.5f, float maxIoU = 0.5f) {
-            this.model = model as MLEdgeModel;
-            this.minScore = minScore;
-            this.maxIoU = maxIoU;
-            this.inputType = model.inputs[0] as MLImageType;
-            this.anchors = GenerateAnchors(inputType.width, inputType.height);
-        }
+        public const string Tag = @"@natsuite/yunet";
 
         /// <summary>
         /// Detect faces in an image.
@@ -50,6 +42,11 @@ namespace NatML.Vision {
             var imageFeature = input as MLImageFeature;
             if (!imageType)
                 throw new ArgumentException(@"YuNet predictor expects an an array or image feature", nameof(inputs));
+            // Apply normalization
+            if (imageFeature != null) {
+                (imageFeature.mean, imageFeature.std) = model.normalization;
+                imageFeature.aspectMode = model.aspectMode;
+            }
             // Predict
             using var inputFeature = (input as IMLEdgeFeature).Create(inputType);
             using var outputFeatures = model.Predict(inputFeature);
@@ -85,6 +82,29 @@ namespace NatML.Vision {
             // Return
             return result;
         }
+
+        /// <summary>
+        /// Dispose the predictor and release resources.
+        /// </summary>
+        public void Dispose () => model.Dispose();
+
+        /// <summary>
+        /// Create the YuNet face predictor.
+        /// </summary>
+        /// <param name="minScore">Minimum candidate score.</param>
+        /// <param name="maxIoU">Maximum intersection-over-union score for overlap removal.</param>
+        /// <param name="configuration">Edge model configuration.</param>
+        /// <param name="accessKey">NatML access key.</param>
+        public static async Task<YuNetPredictor> Create (
+            float minScore = 0.5f,
+            float maxIoU = 0.5f,
+            MLEdgeModel.Configuration configuration = null,
+            string accessKey = null
+        ) {
+            var model = await MLEdgeModel.Create(Tag, configuration, accessKey);
+            var predictor = new YuNetPredictor(model, minScore, maxIoU);
+            return predictor;
+        }
         #endregion
 
 
@@ -103,7 +123,13 @@ namespace NatML.Vision {
         private static readonly int[] AnchorStrides = new [] { 8, 16, 32, 64 };
         private static readonly Vector2 AnchorVariance = new Vector2(0.1f, 0.2f);
 
-        void IDisposable.Dispose () { } // Not used
+        private YuNetPredictor (MLEdgeModel model, float minScore = 0.5f, float maxIoU = 0.5f) {
+            this.model = model;
+            this.minScore = minScore;
+            this.maxIoU = maxIoU;
+            this.inputType = model.inputs[0] as MLImageType;
+            this.anchors = GenerateAnchors(inputType.width, inputType.height);
+        }
 
         private static Rect[] GenerateAnchors (int width, int height) {
             // Compute strides

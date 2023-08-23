@@ -1,6 +1,6 @@
 /* 
 *   YuNet
-*   Copyright (c) 2022 NatML Inc. All Rights Reserved.
+*   Copyright (c) 2023 NatML Inc. All Rights Reserved.
 */
 
 namespace NatML.Visualizers {
@@ -8,10 +8,11 @@ namespace NatML.Visualizers {
     using System.Collections.Generic;
     using UnityEngine;
     using UnityEngine.UI;
+    using VideoKit.UI;
 
     /// <summary>
     /// </summary>
-    [RequireComponent(typeof(RawImage), typeof(AspectRatioFitter))]
+    [RequireComponent(typeof(VideoKitCameraView))]
     public sealed class YuNetVisualizer : MonoBehaviour {
 
         #region --Inspector--
@@ -20,17 +21,6 @@ namespace NatML.Visualizers {
 
 
         #region --Client API--
-        /// <summary>
-        /// Detection source image.
-        /// </summary>
-        public Texture2D image {
-            get => rawImage.texture as Texture2D;
-            set {
-                rawImage.texture = value;
-                aspectFitter.aspectRatio = (float)value.width / value.height;
-            }
-        }
-
         /// <summary>
         /// Render a set of detected faces.
         /// </summary>
@@ -41,7 +31,7 @@ namespace NatML.Visualizers {
                 GameObject.Destroy(rect.gameObject);
             currentRects.Clear();       
             // Render rects
-            var imageRect = new Rect(0, 0, image.width, image.height);
+            var imageRect = new Rect(0, 0, rawImage.texture.width, rawImage.texture.height);
             foreach (var face in faces) {
                 var prefab = Instantiate(faceRect, transform);
                 prefab.gameObject.SetActive(true);

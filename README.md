@@ -5,15 +5,15 @@
 Ultra-high performance face detection architecture.
 
 ## Running the Sample
-Retrieve your access key from [NatML Hub](https://hub.natml.ai/profile) and add it to your Project Settings. Note that running the sample code requires an active [NatML Cloud](https://www.natml.ai/pricing) subscription:
+Retrieve your access key from [NatML Hub](https://hub.natml.ai/profile) and add it to your Project Settings.
 
-![project settings](https://github.com/natmlx/NatDevice/raw/main/.media/key.png)
+![project settings](https://github.com/natmlx/videokit/raw/main/Media/set-access-key.gif)
 
 ## Using the Predictor in a Different Project
 [See the predictor README for more details](Packages/ai.natml.vision.yunet/README.md).
 
 ## Requirements
-- Unity 2021.2+
+- Unity 2022.3+
 
 ## Supported Platforms
 - Android API level 24+
@@ -23,15 +23,12 @@ Retrieve your access key from [NatML Hub](https://hub.natml.ai/profile) and add 
 - WebGL:
     - Chrome 91+
     - Firefox 90+
+    - Safari 16.4+
 
 ## Resources
 - Join the [NatML community on Discord](https://hub.natml.ai/community).
 - See the [NatML documentation](https://docs.natml.ai/unity).
-- See the [NatDevice documentation](https://docs.natml.ai/natdevice).
 - Check out [NatML on GitHub](https://github.com/natmlx).
-- Read the [NatML blog](https://blog.natml.ai/).
-- Discuss [NatML on Unity Forums](https://forum.unity.com/threads/open-beta-natml-machine-learning-runtime.1109339/).
-- Discuss [NatDevice on Unity Forums](https://forum.unity.com/threads/natdevice-media-device-api.374690/).
 - Contact us at [hi@natml.ai](mailto:hi@natml.ai).
 
 Thank you very much!
